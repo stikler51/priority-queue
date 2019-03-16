@@ -11,13 +11,14 @@ class Node {
 		if (!this.left) {
 			this.left = node;
 			node.parent = this;
-		} else if (!this.right && this.left){
+			return true;
+		} else if (!this.right){
 			this.right = node;
             node.parent = this;
+			return true;
 		} else {
-			return;
+			return false;
 		}
-
 	}
 
 	removeChild(node) {
@@ -67,8 +68,6 @@ class Node {
 			} else if (grandPa && grandPa.left == parent) {
 				grandPa.left = this;
 			}
-
-
 		} else  {
 			this.left = parent.left;
 			this.right = parent;
@@ -86,31 +85,7 @@ class Node {
 				grandPa.left = this;
 			}
 		}
-	    // if (this.left) {
-		// 	leftC.parent = parent;
-		// 	this.parent.left = leftC;
-		// }
-	    // if (this.right) {
-		// 	rightC.parent = parent;
-		// 	this.parent.right = rightC;
-		// }
-
-
-
-
-
 	}
 }
 
 module.exports = Node;
-
-// let a = new Node (1, 15);
-// let b = new Node(2, 10);
-// let c = new Node(3, 20);
-// b.parent = a;
-// c.parent = a;
-//
-// a.appendChild(b);
-// a.appendChild(c);
-// b.swapWithParent();
-// console.log(b);
