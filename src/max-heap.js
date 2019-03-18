@@ -9,23 +9,34 @@ class MaxHeap {
 	push(data, priority) {
 	    var n = new Node(data, priority);
 		this.insertNode(n);
+		// console.log(n);
+		// console.log('---------');
 		this.shiftNodeUp(n);
+		// console.log(n);
+		// console.log('-----------------------');
+
 	}
 
 	pop() {
-		if  (!this.root && !this.parentNodes) {
-			return;
+		if  (!this.root) {
+            return;
 		}
-		let n = this.detachRoot();
-		this.restoreRootFromLastInsertedNode(n);
-		// this.shiftNodeDown(this.root);
-		// return this.root.data;
+
+		let dr = this.detachRoot();
+        this.restoreRootFromLastInsertedNode(dr);
+
+        this.shiftNodeDown(this.root);
+
+		//return this.root.data;
+
 	}
 
 	detachRoot() {
 		const r = this.root;
 		this.root = null;
-		this.parentNodes.unshift(r);
+		if (this.parentNodes[0] == r) {
+            this.parentNodes.shift();
+        }
 		return r;
 	}
 
@@ -67,31 +78,46 @@ class MaxHeap {
 	}
 
 	shiftNodeUp(node) {
-		// let a = node.swapWithParent();
-		// if (node.priority > a) {
-		// 	this.shiftNodeUp(node);
-		// }
-		// if (a == null) {
-		// 	this.root = node;
-		// }
-		// let a = node.parent;
-		// console.log(a.priority);
+		// node.swapWithParent();
+		if (node.parent) {
+			if (node.priority > node.parent.priority) {
 
+			    let thisIndex = this.parentNodes.indexOf(node);
+			    let thisParentIndex = this.parentNodes.indexOf(node.parent);
 
-		// if (node.priority > node.parent.priority){
-		// 	if (!node.parent.parent) {
-		// 		this.root = node;
-		// 	}
-		// 	node.swapWithParent();
-		// }
-		// if (node.priority > node.parent.priority) {
-		// 	this.shiftNodeUp(node);
-		// }
+                node.swapWithParent();
 
-		// console.log(node.priority);
-		// console.log(node.parent.priority);
+			    if(thisParentIndex == -1) {
+			        this.parentNodes[0] = node.left;
+                } else {
+                    this.parentNodes = swap(this.parentNodes, thisIndex, thisParentIndex);
+                }
+
+                // console.log(thisIndex);
+                // console.log(thisParentIndex);
+
+				this.shiftNodeUp(node);
+			}
+		}
+		if (!node.parent) {
+			this.root = node;
+		}
+
+		return;
+
+        function swap(arr, indexFrom, indexTo) {
+            let a = arr[indexFrom];
+            let b = arr[indexTo];
+
+            arr[indexTo] = a;
+            arr[indexFrom] = b;
+            return arr;
+        }
+
+		//неправильно вставляет правые элементы. проблема в insertNode либо в appendChild
+
 	}
-//todo: нужно записать  в корень, если меняется с узлом, у которого нет отца
+
 
 	shiftNodeDown(node) {
 		
@@ -100,13 +126,13 @@ class MaxHeap {
 
 module.exports = MaxHeap;
 
-// var heap = new MaxHeap();
-//
-// heap.push(1, 0);
-// heap.push(2, 10);
-// heap.push(3, 5);
-// heap.push(4, 20);
-//
-// console.log(heap.root.priority);
-// console.log(heap.root.left.priority);
-// console.log(heap.root.left.left.priority);
+var h = new MaxHeap();
+
+h.push(42, 15);
+h.push(15, 14);
+h.push(0, 16);
+h.push(100, 100);
+
+let a = h.pop();
+
+console.log(a);

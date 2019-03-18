@@ -52,7 +52,7 @@ class Node {
 		parent.parent = this;
 		this.parent = grandPa;
 
-	    if (parent.left == this) {
+	    if (parent.left === this) {
 	    	this.right = parent.right;
 	    	this.left = parent;
 
@@ -63,11 +63,12 @@ class Node {
 			parent.left = leftC;
 			parent.right = rightC;
 
-			if (grandPa && grandPa.right == parent) {
+			if (grandPa && grandPa.right === parent) {
 				grandPa.right = this;
-			} else if (grandPa && grandPa.left == parent) {
+			} else if (grandPa && grandPa.left === parent) {
 				grandPa.left = this;
 			}
+			return this.parent;
 		} else  {
 			this.left = parent.left;
 			this.right = parent;
@@ -79,11 +80,12 @@ class Node {
 			parent.left = leftC;
 			parent.right = rightC;
 
-			if (grandPa && grandPa.right == parent) {
+			if (grandPa && grandPa.right === parent) {
 				grandPa.right = this;
-			} else if (grandPa && grandPa.left == parent) {
+			} else if (grandPa && grandPa.left === parent) {
 				grandPa.left = this;
 			}
+			return this.parent;
 		}
 	}
 }
