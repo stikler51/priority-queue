@@ -23,25 +23,67 @@ class MaxHeap {
 		}
 
 		let dr = this.detachRoot();
+
         this.restoreRootFromLastInsertedNode(dr);
 
         this.shiftNodeDown(this.root);
 
-		//return this.root.data;
+		return this.root.data;
 
 	}
 
 	detachRoot() {
 		const r = this.root;
-		this.root = null;
 		if (this.parentNodes[0] == r) {
             this.parentNodes.shift();
         }
+		if(this.root.left) {
+			this.root.left.parent = null;
+		}
+		if (this.root.right) {
+			this.root.right.parent = null;
+		}
+		this.root = null;
 		return r;
 	}
 
 	restoreRootFromLastInsertedNode(detached) {
-		
+		let n = this.parentNodes.pop();
+
+		if (this.parentNodes.indexOf(n.parent) == -1 && n.parent !== null) {
+			this.parentNodes.unshift(n.parent);
+
+			if (n.parent.left == n) {
+				n.parent.left = null;
+			}
+			if (n.parent.right == n) {
+				n.parent.right = null;
+			}
+		}
+
+
+
+		if(detached.left !== n) {
+			var left = detached.left;
+			left.parent = n;
+		}
+		if (detached.right !== n) {
+			var right = detached.right;
+			right.parent = n;
+		}
+		this.root = n;
+		this.root.parent = null;
+		if(left) {
+			this.root.left = left;
+		}
+		if(right) {
+			this.root.right = right;
+		}
+		if(!left || !right) {
+			this.parentNodes.unshift(n);
+		}
+
+
 	}
 
 	size() {
@@ -89,6 +131,7 @@ class MaxHeap {
 
 			    if(thisParentIndex == -1) {
 			        this.parentNodes[0] = node.left;
+			        this.parentNodes[1] = node.right;
                 } else {
                     this.parentNodes = swap(this.parentNodes, thisIndex, thisParentIndex);
                 }
@@ -113,14 +156,201 @@ class MaxHeap {
             arr[indexFrom] = b;
             return arr;
         }
-
-		//неправильно вставляет правые элементы. проблема в insertNode либо в appendChild
-
 	}
 
 
 	shiftNodeDown(node) {
-		
+
+
+		if(node.left && node.right) {
+
+			if(node.left.priority > node.priority && node.right.priority > node.priority) {
+
+				if (node.left.priority >= node.right.priority) {
+					node.left.swapWithParent();
+
+					if(node.left) {
+						node.left.parent = node;
+					}
+
+					if(node.right) {
+						node.right.parent = node;
+					}
+
+					if(node.parent.parent == null) {
+						this.root = node.parent;
+					}
+
+
+					let parentIndex = this.parentNodes.indexOf(node.parent);
+					let nodeIndex = this.parentNodes.indexOf(node);
+
+					if (parentIndex !== -1) {
+						this.parentNodes[parentIndex] = node;
+					}
+
+					if (nodeIndex !== -1) {
+						this.parentNodes[nodeIndex] = node.parent;
+					}
+
+
+					this.shiftNodeDown(node);
+
+				} else {
+					node.right.swapWithParent();
+
+					if(node.left) {
+						node.left.parent = node;
+					}
+
+					if(node.right) {
+						node.right.parent = node;
+					}
+
+					if(node.parent.parent == null) {
+						this.root = node.parent;
+					}
+
+					let parentIndex = this.parentNodes.indexOf(node.parent);
+					let nodeIndex = this.parentNodes.indexOf(node);
+
+					if (parentIndex !== -1) {
+						this.parentNodes[parentIndex] = node;
+					}
+
+					if (nodeIndex !== -1) {
+						this.parentNodes[nodeIndex] = node.parent;
+					}
+
+					this.shiftNodeDown(node);
+				}
+
+			} else if(node.left.priority > node.priority) {
+				node.left.swapWithParent();
+
+				if(node.left) {
+					node.left.parent = node;
+				}
+
+				if(node.right) {
+					node.right.parent = node;
+				}
+
+				if(node.parent.parent == null) {
+					this.root = node.parent;
+				}
+
+				let parentIndex = this.parentNodes.indexOf(node.parent);
+				let nodeIndex = this.parentNodes.indexOf(node);
+
+				if (parentIndex !== -1) {
+					this.parentNodes[parentIndex] = node;
+				}
+
+				if (nodeIndex !== -1) {
+					this.parentNodes[nodeIndex] = node.parent;
+				}
+
+				this.shiftNodeDown(node);
+
+			} else if (node.right.priority > node.priority) {
+				node.right.swapWithParent();
+
+				if(node.left) {
+					node.left.parent = node;
+				}
+
+				if(node.right) {
+					node.right.parent = node;
+				}
+
+				if(node.parent.parent == null) {
+					this.root = node.parent;
+				}
+
+				let parentIndex = this.parentNodes.indexOf(node.parent);
+				let nodeIndex = this.parentNodes.indexOf(node);
+
+				if (parentIndex !== -1) {
+					this.parentNodes[parentIndex] = node;
+				}
+
+				if (nodeIndex !== -1) {
+					this.parentNodes[nodeIndex] = node.parent;
+				}
+
+				this.shiftNodeDown(node);
+
+			}
+
+			return;
+
+		} else if (node.left) {
+			if(node.left.priority > node.priority) {
+				node.left.swapWithParent();
+
+				if(node.left) {
+					node.left.parent = node;
+				}
+
+				if(node.right) {
+					node.right.parent = node;
+				}
+
+				if(node.parent.parent == null) {
+					this.root = node.parent;
+				}
+
+				let parentIndex = this.parentNodes.indexOf(node.parent);
+				let nodeIndex = this.parentNodes.indexOf(node);
+
+				if (parentIndex !== -1) {
+					this.parentNodes[parentIndex] = node;
+				}
+
+				if (nodeIndex !== -1) {
+					this.parentNodes[nodeIndex] = node.parent;
+				}
+
+				this.shiftNodeDown(node);
+
+			}
+			return;
+
+		} else if (node.right) {
+			if (node.right.priority > node.priority) {
+				node.right.swapWithParent();
+
+				if(node.left) {
+					node.left.parent = node;
+				}
+
+				if(node.right) {
+					node.right.parent = node;
+				}
+
+				if(node.parent.parent == null) {
+					this.root = node.parent;
+				}
+
+				let parentIndex = this.parentNodes.indexOf(node.parent);
+				let nodeIndex = this.parentNodes.indexOf(node);
+
+				if (parentIndex !== -1) {
+					this.parentNodes[parentIndex] = node;
+				}
+
+				if (nodeIndex !== -1) {
+					this.parentNodes[nodeIndex] = node.parent;
+				}
+
+				this.shiftNodeDown(node);
+			}
+
+			return;
+
+		}
+		return;
 	}
 }
 
@@ -133,6 +363,13 @@ h.push(15, 14);
 h.push(0, 16);
 h.push(100, 100);
 
-let a = h.pop();
+console.log(h.pop());
+//
+// console.log(h.parentNodes);
+// console.log(det);
 
-console.log(a);
+// h.push(100, 100);
+//
+// let a = h.pop();
+//
+// console.log(a);
