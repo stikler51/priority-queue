@@ -20,23 +20,32 @@ class MaxHeap {
 	}
 
 	pop() {
+
 		if  (!this.root) {
+            this.sizee = 0;
             return;
 		}
 
-		if(this.parentNodes.length == 1) {
-		    return this.root.data;
+        if(this.parentNodes.length == 1) {
+			const currentRoot = this.root;
+        	this.root = null;
+        	this.parentNodes= [];
+        	this.sizee -= 1;
+            return currentRoot.data;
         }
 
-		const currentRoot = this.root;
 
-		let detached = this.detachRoot();
+        const currentRoot = this.root;
+
+        let detached = this.detachRoot();
 
         this.restoreRootFromLastInsertedNode(detached);
 
         this.shiftNodeDown(this.root);
 
+
         this.sizee -= 1;
+
 
 		return currentRoot.data;
 
@@ -427,34 +436,3 @@ class MaxHeap {
 
 module.exports = MaxHeap;
 
-var h = new MaxHeap();
-
-h.push(42, 15);
-h.push(15, 14);
-h.push(0, 16);
-h.push(100, 100);
-
-
-
-// let dr = h.detachRoot();
-// h.restoreRootFromLastInsertedNode(dr);
-// h.shiftNodeDown(h.root);
-//
-console.log(h.pop());
-console.log(h.pop());
-console.log(h.pop());
-console.log(h.pop());
-// console.log(h.pop());
-// console.log(h.pop());
-// console.log(h.pop());
-// console.log(h.pop());
-
-//
-// console.log(h.parentNodes);
-// console.log(det);
-
-// h.push(100, 100);
-//
-// let a = h.pop();
-//
-// console.log(a);
